@@ -42,8 +42,17 @@ export class UsersService {
     private async insertUser(id: string, password: string, nickname: string): Promise<void> {
         const user = new UserEntity();
         user.id = id;
+        // TODO 패스워드 암호화(by bcrypt library)
         user.password = password;
         user.nickname = nickname;
         await this.usersRepository.insert(user);
+    }
+
+    async findUserById(id: string): Promise<UserEntity> {
+        const user = await this.usersRepository.findOne({
+            where: { id }
+        });
+
+        return user;
     }
 }
