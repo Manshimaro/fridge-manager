@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { ItemsModule } from './items/items.module';
 
 // TODO 환경 변수로 DB 옵션 설정하기
 @Module({
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
     }),
     AuthModule,
+    ItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -22,4 +22,10 @@ export class AppController {
   dashboard() {
     return {};
   }
+
+  @Get('item-add')
+  @Render('item-add')
+  itemAdd() {
+    return {};
+  }
 }
