@@ -16,9 +16,6 @@ export class UsersService {
         await this.checkDuplication(id, nickname);
 
         await this.insertUser(id, password, nickname);
-        
-        // TODO 로그인 페이지로 이동
-        return "회원 가입 성공!";
     }
 
     private async checkDuplication(id: string, nickname: string): Promise<void> {
