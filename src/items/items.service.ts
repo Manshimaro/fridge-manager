@@ -36,4 +36,11 @@ export class ItemsService {
         item.expDate = expDate;
         await this.itemsRepository.insert(item);
     }
+
+    async checkItem(userId: string): Promise<ItemEntity[]> {
+        const items = await this.itemsRepository.find({
+            where: { userId }
+        });
+        return items;
+    }
 }

@@ -3,7 +3,8 @@ import {
     Post,
     Request,
     UseGuards,
-    Body
+    Body,
+    Get
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemsService } from './items.service';
@@ -18,5 +19,12 @@ export class ItemsController {
     addItem(@Request() req, @Body() addItemDto: AddItemDto) {
         const userId = req.user.sub;
         return this.itemsService.addItem(userId, addItemDto);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get()
+    checkItem(@Request() req) {
+        const userId = req.user.sub;
+        return this.itemsService.checkItem(userId);
     }
 }

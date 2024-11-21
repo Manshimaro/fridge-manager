@@ -28,4 +28,10 @@ export class AppController {
   itemAdd() {
     return {};
   }
+
+  @Get('item-check')
+  @Render('item-check')
+  itemCheck() {
+    return {};
+  }
 }
