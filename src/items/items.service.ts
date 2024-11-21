@@ -28,7 +28,7 @@ export class ItemsService {
         }
     }
 
-    private async insertItem(userId: string, name: string, number: number, expDate: Date): Promise<void> {
+    private async insertItem(userId: string, name: string, number: number, expDate: string): Promise<void> {
         const item = new ItemEntity();
         item.userId = userId;
         item.name = name;

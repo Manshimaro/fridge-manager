@@ -12,7 +12,6 @@ export class AddItemDto {
     @IsNumber()
     readonly number: number;
 
-    @Type(() => Date)
-    @IsDate()
-    readonly expDate: Date;
+    @IsString()
+    readonly expDate: string;
 }

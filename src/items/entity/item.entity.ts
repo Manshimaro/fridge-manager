@@ -11,6 +11,6 @@ export class ItemEntity {
     @Column()
     number: number;
 
-    @Column()
-    expDate: Date;
+    @Column({ type: 'date' })
+    expDate: string;
 }
