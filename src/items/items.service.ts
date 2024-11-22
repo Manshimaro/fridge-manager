@@ -43,4 +43,11 @@ export class ItemsService {
         });
         return items;
     }
+
+    async deleteItem(userId: string, name: string): Promise<void> {
+        await this.itemsRepository.delete({
+            userId, 
+            name
+        });
+    }
 }

@@ -4,7 +4,9 @@ import {
     Request,
     UseGuards,
     Body,
-    Get
+    Get,
+    Param,
+    Delete
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemsService } from './items.service';
@@ -26,5 +28,12 @@ export class ItemsController {
     checkItem(@Request() req) {
         const userId = req.user.sub;
         return this.itemsService.checkItem(userId);
+    }
+
+    @UseGuards(AuthGuard)
+    @Delete(':name')
+    deleteItem(@Request() req, @Param('name') name: string) {
+        const userId = req.user.sub;
+        return this.itemsService.deleteItem(userId, name);
     }
 }
