@@ -34,4 +34,10 @@ export class AppController {
   itemCheck() {
     return {};
   }
+
+  @Get('item-change')
+  @Render('item-change')
+  itemChange() {
+    return {};
+  }
 }

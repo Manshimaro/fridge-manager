@@ -24,7 +24,10 @@ async function itemCheck() {
                 <td>${item.name}</td>
                 <td>${item.number}</td>
                 <td>${item.expDate}</td>
-                <td><button onclick="itemDelete('${item.name}')">삭제</button></td>
+                <td>
+                    <button onclick="itemChange('${item.name}')">변경</button>
+                    <button onclick="itemDelete('${item.name}')">삭제</button>
+                </td>
             `;
             table.appendChild(row);
         });
@@ -59,6 +62,12 @@ async function itemDelete(itemName) {
     } catch(error) {
         alert(error);
     }
+}
+
+function itemChange(itemName) {
+    const itemChangeUrl = `/item-change?name=${itemName}`;
+
+    window.location.href = itemChangeUrl;
 }
 
 itemCheck();

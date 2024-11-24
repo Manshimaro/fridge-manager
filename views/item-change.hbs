@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>아이템 변경</title>
+    </head>
+    <body>
+        <h2>아이템 변경</h2>
+
+        <form id="item-change-form">
+            <table>
+                <tr>
+                    <td><label for="name">이름</label></td>
+                    <td><input type="text" name="name" id="name" disabled /></td>
+                </tr>
+                <tr>
+                    <td><label for="number">개수</label></td>
+                    <td><input type="number" name="number" id="number" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="expDate">소비기한</label></td>
+                    <td><input type="date" name="expDate" id="expDate" required /></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <input type="submit" value="변경" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <script src="/item-change.js"></script>
+    </body>
+</html>

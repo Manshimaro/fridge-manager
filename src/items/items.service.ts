@@ -3,6 +3,7 @@ import { AddItemDto } from './dto/add-item-dto';
 import { ItemEntity } from './entity/item.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ChangeItemDto } from './dto/change-item-dto';
 
 @Injectable()
 export class ItemsService {
@@ -49,5 +50,28 @@ export class ItemsService {
             userId, 
             name
         });
+    }
+
+    async checkOneItem(userId: string, name: string): Promise<ItemEntity> {
+        const item = await this.itemsRepository.findOne({
+            where: { userId, name }
+        });
+        return item;
+    }
+
+    async changeItem(userId: string, name: string, changeItemDto: ChangeItemDto) {
+        const { number, expDate } = changeItemDto;
+
+        const item = await this.itemsRepository.findOne({
+            where: { userId, name }
+        });
+
+        if(!item) {
+            throw new UnprocessableEntityException('존재하지 않는 이름입니다');
+        }
+
+        item.number = number;
+        item.expDate = expDate;
+        await this.itemsRepository.save(item);
     }
 }

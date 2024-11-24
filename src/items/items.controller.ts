@@ -6,11 +6,13 @@ import {
     Body,
     Get,
     Param,
-    Delete
+    Delete,
+    Patch
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemsService } from './items.service';
 import { AddItemDto } from './dto/add-item-dto';
+import { ChangeItemDto } from './dto/change-item-dto';
 
 @Controller('items')
 export class ItemsController {
@@ -35,5 +37,19 @@ export class ItemsController {
     deleteItem(@Request() req, @Param('name') name: string) {
         const userId = req.user.sub;
         return this.itemsService.deleteItem(userId, name);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get(':name')
+    checkOneItem(@Request() req, @Param('name') name: string) {
+        const userId = req.user.sub;
+        return this.itemsService.checkOneItem(userId, name);
+    }
+
+    @UseGuards(AuthGuard)
+    @Patch(':name')
+    changeItem(@Request() req, @Param('name') name: string, @Body() changeItemDto: ChangeItemDto) {
+        const userId = req.user.sub;
+        return this.itemsService.changeItem(userId, name, changeItemDto);
     }
 }
