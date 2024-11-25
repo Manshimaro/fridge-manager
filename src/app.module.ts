@@ -5,20 +5,27 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ItemsModule } from './items/items.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-// TODO 환경 변수로 DB 옵션 설정하기
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: (process.env.NODE_ENV === 'production') ? '.production.env' : '.development.env',
+      isGlobal: true,
+    }),
     UsersModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'test',
-      database: 'test',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        type: configService.get<'mysql'>('DB_TYPE'),
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
+      }),
+      inject: [ConfigService],
     }),
     AuthModule,
     ItemsModule,
