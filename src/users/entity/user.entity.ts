@@ -5,7 +5,7 @@ export class UserEntity {
     @PrimaryColumn({ length: 20 })
     id: string;
 
-    @Column({ length: 64 })
+    @Column({ length: 60 })
     password: string;
 
     @Column({ length: 20 })

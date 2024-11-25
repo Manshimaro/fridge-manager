@@ -3,6 +3,7 @@ import { LoginDto } from './dto/login-dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from 'src/users/entity/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -32,8 +33,7 @@ export class AuthService {
     private async validateUser(id: string, password: string): Promise<UserEntity> {
         // DB 조회
         const user = await this.usersService.findUserById(id);
-        // TODO password 대조 시, 암호화된 값을 대조하도록 변경
-        if (!user || user.password !== password) {
+        if ( !user || !( await bcrypt.compare(password, user.password) ) ) {
             return null;
         }
         return user;

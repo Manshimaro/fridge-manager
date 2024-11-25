@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entity/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -39,8 +40,7 @@ export class UsersService {
     private async insertUser(id: string, password: string, nickname: string): Promise<void> {
         const user = new UserEntity();
         user.id = id;
-        // TODO 패스워드 암호화(by bcrypt library)
-        user.password = password;
+        user.password = await bcrypt.hash(password, 10);
         user.nickname = nickname;
         await this.usersRepository.insert(user);
     }
