@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Redirect, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -39,5 +39,11 @@ export class AppController {
   @Render('item-change')
   itemChange() {
     return {};
+  }
+
+  @Get()
+  @Redirect('login')
+  root() {
+    return;
   }
 }
