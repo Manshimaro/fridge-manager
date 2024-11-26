@@ -58,7 +58,7 @@ document.getElementById('item-change-form').addEventListener('submit', async fun
         }
 
         alert('아이템 변경 완료!');
-        window.location.href = '/dashboard';
+        window.location.href = '/item-check';
     } catch(error) {
         alert(error);
     }
