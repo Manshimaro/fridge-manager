@@ -20,10 +20,23 @@ async function itemCheck() {
         data.forEach(item => {
             const row = document.createElement('tr');
             row.setAttribute('id', item.name);
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const expDate = new Date(item.expDate);
+
+            const expDateCell = document.createElement('td');
+            expDateCell.textContent = item.expDate;
+            if (expDate < today) {
+                expDateCell.style.backgroundColor = 'red';
+            }
+
             row.innerHTML = `
                 <td>${item.name}</td>
                 <td>${item.number}</td>
-                <td>${item.expDate}</td>
+            `;
+            row.appendChild(expDateCell);
+            row.innerHTML += `
                 <td>
                     <button onclick="itemChange('${item.name}')">변경</button>
                     <button onclick="itemDelete('${item.name}')">삭제</button>
