@@ -40,7 +40,8 @@ export class ItemsService {
 
     async checkItem(userId: string): Promise<ItemEntity[]> {
         const items = await this.itemsRepository.find({
-            where: { userId }
+            where: { userId },
+            order: { expDate: 'ASC' },
         });
         return items;
     }
