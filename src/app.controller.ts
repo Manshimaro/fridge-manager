@@ -46,4 +46,10 @@ export class AppController {
   root() {
     return;
   }
+
+  @Get('setting')
+  @Render('setting')
+  setting() {
+    return {};
+  }
 }

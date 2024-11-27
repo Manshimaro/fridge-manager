@@ -1,7 +1,11 @@
+import jwtDecode from 'https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.esm.js';
+
 async function itemCheck() {
     try {
         const jwt = localStorage.getItem('jwt');
-    
+        const decoded = jwtDecode(jwt);
+        const id = decoded.sub;
+
         const response = await fetch('/items', {
             method: 'GET',
             headers: {
@@ -13,22 +17,44 @@ async function itemCheck() {
             const errorData = await response.json();
             throw new Error(errorData.message);
         }
+
+        const response2 = await fetch(`/users/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwt}`,
+            }
+        });
+
+        if(!response2.ok) {
+            const errorData = await response2.json();
+            throw new Error(errorData.message);
+        }
     
-        const data = await response.json();
+        const itemsData = await response.json();
+        const userData = await response2.json();
+
         const table = document.getElementById('itemTable');
         
-        data.forEach(item => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const cautionDate = new Date(today);
+        cautionDate.setDate(cautionDate.getDate() + userData.cautionDay);
+
+        itemsData.forEach(item => {
             const row = document.createElement('tr');
             row.setAttribute('id', item.name);
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
             const expDate = new Date(item.expDate);
+            expDate.setHours(0, 0, 0, 0);
 
             const expDateCell = document.createElement('td');
             expDateCell.textContent = item.expDate;
             if (expDate < today) {
-                expDateCell.style.backgroundColor = 'red';
+                expDateCell.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+            } else if (expDate <= cautionDate) {
+                expDateCell.style.backgroundColor = 'rgba(255, 255, 0, 0.3)';
+            } else {
+                expDateCell.style.backgroundColor = 'rgba(0, 255, 0, 0.3)';
             }
 
             row.innerHTML = `
@@ -84,3 +110,5 @@ function itemChange(itemName) {
 }
 
 itemCheck();
+window.itemDelete = itemDelete;
+window.itemChange = itemChange;

@@ -11,4 +11,7 @@ export class UserEntity {
     @Column({ length: 20 })
     @Unique('UQ_NICKNAME', ['nickname'])
     nickname: string;
+
+    @Column({ default: 7 })
+    cautionDay: number;
 }

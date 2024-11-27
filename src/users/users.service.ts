@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
+import { ChangeUserSettingDto } from './dto/change-user-setting-dto';
 
 @Injectable()
 export class UsersService {
@@ -51,5 +52,20 @@ export class UsersService {
         });
 
         return user;
+    }
+
+    async changeUserSetting(id: string, changeUserSettingDto: ChangeUserSettingDto) {
+        const { cautionDay } = changeUserSettingDto;
+
+        const user = await this.usersRepository.findOne({
+            where: { id }
+        });
+
+        if(!user) {
+            throw new UnprocessableEntityException('존재하지 않는 ID입니다');
+        }
+
+        user.cautionDay = cautionDay;
+        await this.usersRepository.save(user);
     }
 }
