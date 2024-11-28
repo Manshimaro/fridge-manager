@@ -52,4 +52,10 @@ export class AppController {
   setting() {
     return {};
   }
+
+  @Get('category-add')
+  @Render('category-add')
+  categoryAdd() {
+    return {};
+  }
 }
