@@ -58,4 +58,10 @@ export class AppController {
   categoryAdd() {
     return {};
   }
+
+  @Get('category-check')
+  @Render('category-check')
+  categoryCheck() {
+    return {};
+  }
 }

@@ -41,4 +41,11 @@ export class CategoriesService {
         category.name = name;
         await this.categoriesRepository.insert(category);
     }
+
+    async delete(userId: string, name: string): Promise<void> {
+        await this.categoriesRepository.delete({
+            userId, 
+            name
+        });
+    }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Request, Delete, Param } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AddCategoryDto } from './dto/add-category-dto';
@@ -19,5 +19,12 @@ export class CategoriesController {
     create(@Request() req, @Body() addCategoryDto: AddCategoryDto) {
         const userId = req.user.sub;
         return this.categoriesService.create(userId, addCategoryDto);
+    }
+
+    @UseGuards(AuthGuard)
+    @Delete(':name')
+    delete(@Request() req, @Param('name') name: string) {
+        const userId = req.user.sub;
+        return this.categoriesService.delete(userId, name);
     }
 }
