@@ -5,19 +5,27 @@
         <title>아이템 확인</title>
     </head>
     <style>
-        table {
+        #itemTable {
             border-collapse: collapse;
         }
-        th, td {
+        #itemTable th, #itemTable td {
             border: 1px solid black;
             padding: 8px;
         }
-        th {
+        #itemTable th {
             background-color: #d2d2d2;
         }
     </style>
     <body>
         <h2>아이템 확인</h2>
+
+        <form>
+            <label for="name">이름</label>
+            <input type="text" name="name" id="name">
+            <input type="submit" value="검색" />
+        </form>
+
+        <br />
 
         <table id="itemTable">
             <tr>

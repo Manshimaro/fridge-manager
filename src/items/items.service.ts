@@ -1,7 +1,7 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { AddItemDto } from './dto/add-item-dto';
 import { ItemEntity } from './entity/item.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChangeItemDto } from './dto/change-item-dto';
 
@@ -38,9 +38,12 @@ export class ItemsService {
         await this.itemsRepository.insert(item);
     }
 
-    async checkItem(userId: string): Promise<ItemEntity[]> {
+    async checkItem(userId: string, name: string): Promise<ItemEntity[]> {
         const items = await this.itemsRepository.find({
-            where: { userId },
+            where: { 
+                userId, 
+                name: Like(`%${name}%`) 
+            },
             order: { expDate: 'ASC' },
         });
         return items;

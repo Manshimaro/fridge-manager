@@ -7,7 +7,8 @@ import {
     Get,
     Param,
     Delete,
-    Patch
+    Patch,
+    Query
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemsService } from './items.service';
@@ -27,9 +28,9 @@ export class ItemsController {
 
     @UseGuards(AuthGuard)
     @Get()
-    checkItem(@Request() req) {
+    checkItem(@Request() req, @Query('name') name: string) {
         const userId = req.user.sub;
-        return this.itemsService.checkItem(userId);
+        return this.itemsService.checkItem(userId, name);
     }
 
     @UseGuards(AuthGuard)

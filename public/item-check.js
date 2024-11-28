@@ -1,12 +1,22 @@
 import jwtDecode from 'https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.esm.js';
 
+function getQueryParameter(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
 async function itemCheck() {
     try {
         const jwt = localStorage.getItem('jwt');
         const decoded = jwtDecode(jwt);
         const id = decoded.sub;
 
-        const response = await fetch('/items', {
+        let name = getQueryParameter('name');
+        if(name === null) {
+            name = '';
+        }
+
+        const response = await fetch(`/items?name=${name}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${jwt}`,
