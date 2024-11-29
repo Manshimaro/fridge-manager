@@ -12,11 +12,11 @@ export class ItemsService {
     ) { }
 
     async addItem(userId: string, addItemDto: AddItemDto) {
-        const { name, number, expDate } = addItemDto;
+        const { name, number, expDate, category } = addItemDto;
         
         await this.checkDuplication(userId, name);
 
-        await this.insertItem(userId, name, number, expDate);
+        await this.insertItem(userId, name, number, expDate, category);
     }
 
     private async checkDuplication(userId: string, name: string): Promise<void> {
@@ -29,20 +29,22 @@ export class ItemsService {
         }
     }
 
-    private async insertItem(userId: string, name: string, number: number, expDate: string): Promise<void> {
+    private async insertItem(userId: string, name: string, number: number, expDate: string, category: string): Promise<void> {
         const item = new ItemEntity();
         item.userId = userId;
         item.name = name;
         item.number = number;
         item.expDate = expDate;
+        item.category = category;
         await this.itemsRepository.insert(item);
     }
 
-    async checkItem(userId: string, name: string): Promise<ItemEntity[]> {
+    async checkItem(userId: string, name: string, category: string): Promise<ItemEntity[]> {
         const items = await this.itemsRepository.find({
             where: { 
                 userId, 
-                name: Like(`%${name}%`) 
+                name: Like(`%${name}%`), 
+                category : category ? category : Like('%')
             },
             order: { expDate: 'ASC' },
         });
@@ -64,7 +66,7 @@ export class ItemsService {
     }
 
     async changeItem(userId: string, name: string, changeItemDto: ChangeItemDto) {
-        const { number, expDate } = changeItemDto;
+        const { number, expDate, category } = changeItemDto;
 
         const item = await this.itemsRepository.findOne({
             where: { userId, name }
@@ -76,6 +78,7 @@ export class ItemsService {
 
         item.number = number;
         item.expDate = expDate;
+        item.category = category;
         await this.itemsRepository.save(item);
     }
 }

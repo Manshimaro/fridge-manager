@@ -3,11 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from './entity/category.entity';
 import { Repository } from 'typeorm';
 import { AddCategoryDto } from './dto/add-category-dto';
+import { ItemEntity } from 'src/items/entity/item.entity';
 
 @Injectable()
 export class CategoriesService {
     constructor(
         @InjectRepository(CategoryEntity) private categoriesRepository: Repository<CategoryEntity>,
+        @InjectRepository(ItemEntity) private itemsRepository: Repository<ItemEntity>,
     ) { }
 
     async findAll(userId: string): Promise<CategoryEntity[]> {
@@ -47,5 +49,10 @@ export class CategoriesService {
             userId, 
             name
         });
+
+        await this.itemsRepository.update(
+            { userId, category: name },
+            { category: "" }
+        );
     }
 }

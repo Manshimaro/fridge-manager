@@ -1,3 +1,33 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    const categorySelect = document.getElementById('category');
+    try {
+        const jwt = localStorage.getItem('jwt');
+
+        const response = await fetch('/categories', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwt}`,
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+        }
+
+        const categories = await response.json();
+
+        categories.forEach((category) => {
+            const option = document.createElement("option");
+            option.value = category.name;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+    } catch (error) {
+        alert(error);
+    }
+});
+
 document.getElementById('item-add-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -5,6 +35,7 @@ document.getElementById('item-add-form').addEventListener('submit', async functi
     const name = formData.get('name');
     const number = formData.get('number');
     const expDate = formData.get('expDate');
+    const category = formData.get('category');
 
     try {
         const jwt = localStorage.getItem('jwt');
@@ -15,7 +46,7 @@ document.getElementById('item-add-form').addEventListener('submit', async functi
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${jwt}`,
             },
-            body: JSON.stringify({ name, number, expDate }),
+            body: JSON.stringify({ name, number, expDate, category }),
         });
 
         if (!response.ok) {

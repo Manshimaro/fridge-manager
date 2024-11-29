@@ -5,6 +5,8 @@ function getQueryParameter(param) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const name = getQueryParameter('name');
+    const categorySelect = document.getElementById('category');
+
     if (name) {
         try {
             const jwt = localStorage.getItem('jwt');
@@ -19,11 +21,33 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message);
             }
+
+            const response2 = await fetch('/categories', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwt}`,
+                }
+            });
+
+            if (!response2.ok) {
+                const errorData = await response2.json();
+                throw new Error(errorData.message); 
+            }
             
             const itemData = await response.json();
+            const categoriesData = await response2.json();
+
+            categoriesData.forEach((category) => {
+                const option = document.createElement('option');
+                option.value = category.name;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+
             document.getElementById('name').value = itemData.name;
             document.getElementById('number').value = itemData.number;
             document.getElementById('expDate').value = itemData.expDate;
+            categorySelect.value = itemData.category;
         } catch (error) {
             alert(error);
         }
@@ -39,6 +63,7 @@ document.getElementById('item-change-form').addEventListener('submit', async fun
     const name = getQueryParameter('name');
     const number = formData.get('number');
     const expDate = formData.get('expDate');
+    const category = formData.get('category');
 
     try {
         const jwt = localStorage.getItem('jwt');
@@ -49,7 +74,7 @@ document.getElementById('item-change-form').addEventListener('submit', async fun
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${jwt}`,
             },
-            body: JSON.stringify({ number, expDate }),
+            body: JSON.stringify({ number, expDate, category }),
         });
 
         if (!response.ok) {

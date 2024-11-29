@@ -14,4 +14,8 @@ export class AddItemDto {
 
     @IsString()
     readonly expDate: string;
+
+    @MaxLength(30)
+    @IsString()
+    readonly category: string;
 }

@@ -13,4 +13,7 @@ export class ItemEntity {
 
     @Column({ type: 'date' })
     expDate: string;
+
+    @Column({ length: 30 })
+    category: string;
 }

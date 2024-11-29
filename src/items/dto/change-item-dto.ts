@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsPositive } from 'class-validator';
+import { IsString, IsNumber, IsPositive, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ChangeItemDto {
@@ -9,4 +9,8 @@ export class ChangeItemDto {
 
     @IsString()
     readonly expDate: string;
+
+    @MaxLength(30)
+    @IsString()
+    readonly category: string;
 }

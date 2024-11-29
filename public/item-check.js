@@ -5,6 +5,49 @@ function getQueryParameter(param) {
     return urlParams.get(param);
 }
 
+document.addEventListener('DOMContentLoaded', async () => {
+    const categorySelect = document.getElementById('category');
+    try {
+        const jwt = localStorage.getItem('jwt');
+
+        const response = await fetch('/categories', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwt}`,
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+        }
+
+        const categories = await response.json();
+
+        categories.forEach((category) => {
+            const option = document.createElement("option");
+            option.value = category.name;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+
+        let name = getQueryParameter('name');
+        if(name === null) {
+            name = '';
+        }
+
+        let category = getQueryParameter('category');
+        if(category === null) {
+            category = '';
+        }
+
+        document.getElementById('name').value = name;
+        document.getElementById('category').value = category;
+    } catch (error) {
+        alert(error);
+    }
+})
+
 async function itemCheck() {
     try {
         const jwt = localStorage.getItem('jwt');
@@ -16,7 +59,12 @@ async function itemCheck() {
             name = '';
         }
 
-        const response = await fetch(`/items?name=${name}`, {
+        let category = getQueryParameter('category');
+        if(category === null) {
+            category = '';
+        }
+
+        const response = await fetch(`/items?name=${name}&category=${category}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${jwt}`,
@@ -73,6 +121,7 @@ async function itemCheck() {
             `;
             row.appendChild(expDateCell);
             row.innerHTML += `
+                <td>${item.category}</td>
                 <td>
                     <button onclick="itemChange('${item.name}')">변경</button>
                     <button onclick="itemDelete('${item.name}')">삭제</button>

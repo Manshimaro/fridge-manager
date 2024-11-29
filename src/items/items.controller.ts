@@ -28,9 +28,9 @@ export class ItemsController {
 
     @UseGuards(AuthGuard)
     @Get()
-    checkItem(@Request() req, @Query('name') name: string) {
+    checkItem(@Request() req, @Query('name') name: string, @Query('category') category: string) {
         const userId = req.user.sub;
-        return this.itemsService.checkItem(userId, name);
+        return this.itemsService.checkItem(userId, name, category);
     }
 
     @UseGuards(AuthGuard)
