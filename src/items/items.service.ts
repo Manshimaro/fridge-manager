@@ -39,7 +39,7 @@ export class ItemsService {
         await this.itemsRepository.insert(item);
     }
 
-    async checkItem(userId: string, name: string, category: string): Promise<ItemEntity[]> {
+    async checkItem(userId: string, name: string, category: string, page: number): Promise<ItemEntity[]> {
         const items = await this.itemsRepository.find({
             where: { 
                 userId, 
@@ -47,6 +47,8 @@ export class ItemsService {
                 category : category ? category : Like('%')
             },
             order: { expDate: 'ASC' },
+            skip: (page - 1) * 5,
+            take: 5,
         });
         return items;
     }
@@ -80,5 +82,15 @@ export class ItemsService {
         item.expDate = expDate;
         item.category = category;
         await this.itemsRepository.save(item);
+    }
+
+    async getItemCount(userId: string, name: string, category: string) {
+        return this.itemsRepository.count({
+            where: { 
+                userId, 
+                name: Like(`%${name}%`), 
+                category : category ? category : Like('%')
+            }
+        });
     }
 }

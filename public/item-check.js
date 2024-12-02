@@ -1,5 +1,7 @@
 import jwtDecode from 'https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.esm.js';
 
+let page = 1;
+
 function getQueryParameter(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -46,6 +48,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         alert(error);
     }
+
+    document.getElementById('prevButton').addEventListener("click", () => handlePageChange("prev"));
+    document.getElementById('nextButton').addEventListener("click", () => handlePageChange("next"));
 })
 
 async function itemCheck() {
@@ -64,7 +69,7 @@ async function itemCheck() {
             category = '';
         }
 
-        const response = await fetch(`/items?name=${name}&category=${category}`, {
+        const response = await fetch(`/items?name=${name}&category=${category}&page=${page}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${jwt}`,
@@ -92,6 +97,16 @@ async function itemCheck() {
         const userData = await response2.json();
 
         const table = document.getElementById('itemTable');
+
+        table.innerHTML = `
+            <tr>
+                <th>이름</th>
+                <th>개수</th>
+                <th>소비기한</th>
+                <th>카테고리</th>
+                <th>변경 / 삭제</th>
+            </tr>
+        `;
         
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -166,6 +181,42 @@ function itemChange(itemName) {
     const itemChangeUrl = `/item-change?name=${itemName}`;
 
     window.location.href = itemChangeUrl;
+}
+
+async function handlePageChange(direction) {
+    if (direction === "prev") {
+        if (page > 1) {
+            page--;
+            itemCheck();
+        }
+    } else if (direction === "next") {
+        const jwt = localStorage.getItem('jwt');
+
+        let name = getQueryParameter('name');
+        if(name === null) {
+            name = '';
+        }
+
+        let category = getQueryParameter('category');
+        if(category === null) {
+            category = '';
+        }
+
+        const response = await fetch(`/items/count?name=${name}&category=${category}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwt}`,
+            }
+        });
+
+        const itemCount = await response.json();
+        const totalPage = Math.ceil(itemCount / 5);
+
+        if (page < totalPage) {
+            page++;
+            itemCheck();
+        }
+    }
 }
 
 itemCheck();

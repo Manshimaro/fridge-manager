@@ -28,9 +28,16 @@ export class ItemsController {
 
     @UseGuards(AuthGuard)
     @Get()
-    checkItem(@Request() req, @Query('name') name: string, @Query('category') category: string) {
+    checkItem(@Request() req, @Query('name') name: string, @Query('category') category: string, @Query('page') page: number) {
         const userId = req.user.sub;
-        return this.itemsService.checkItem(userId, name, category);
+        return this.itemsService.checkItem(userId, name, category, page);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('count')
+    getItemCount(@Request() req, @Query('name') name: string, @Query('category') category: string) {
+        const userId = req.user.sub;
+        return this.itemsService.getItemCount(userId, name, category);
     }
 
     @UseGuards(AuthGuard)
