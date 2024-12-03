@@ -9,6 +9,7 @@ function getQueryParameter(param) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const categorySelect = document.getElementById('category');
+    
     try {
         const jwt = localStorage.getItem('jwt');
 
@@ -49,8 +50,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert(error);
     }
 
+    itemCheck();
+
     document.getElementById('prevButton').addEventListener("click", () => handlePageChange("prev"));
-    document.getElementById('nextButton').addEventListener("click", () => handlePageChange("next"));
+    document.getElementById('nextButton').addEventListener("click", () => handlePageChange("next"));  
 })
 
 async function itemCheck() {
@@ -69,7 +72,7 @@ async function itemCheck() {
             category = '';
         }
 
-        const response = await fetch(`/items?name=${name}&category=${category}&page=${page}`, {
+        let response = await fetch(`/items?name=${name}&category=${category}&page=${page}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${jwt}`,
@@ -81,20 +84,21 @@ async function itemCheck() {
             throw new Error(errorData.message);
         }
 
-        const response2 = await fetch(`/users/${id}`, {
+        const itemsData = await response.json();
+
+        response = await fetch(`/users/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${jwt}`,
             }
         });
 
-        if(!response2.ok) {
-            const errorData = await response2.json();
+        if(!response.ok) {
+            const errorData = await response.json();
             throw new Error(errorData.message);
         }
-    
-        const itemsData = await response.json();
-        const userData = await response2.json();
+        
+        const userData = await response.json();
 
         const table = document.getElementById('itemTable');
 
@@ -219,6 +223,5 @@ async function handlePageChange(direction) {
     }
 }
 
-itemCheck();
 window.itemDelete = itemDelete;
 window.itemChange = itemChange;
